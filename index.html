@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Mortgage Calculator | Pure Equity Realty US</title>
+
+  <meta name="description"
+    content="Estimate your monthly mortgage payments with this free mortgage calculator by Pure Equity Realty US.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      color: #243247;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    header {
+      background: #142c49;
+      color: white;
+      padding: 35px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+    }
+
+    main {
+      max-width: 650px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .calculator {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: 1px solid #ccd3dc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 25px;
+      background: #142c49;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #28527a;
+    }
+
+    .result {
+      margin-top: 25px;
+      padding: 20px;
+      background: #eef5fc;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .result strong {
+      display: block;
+      font-size: 28px;
+      color: #142c49;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 14px;
+    }
+
+    footer a {
+      color: #142c49;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Mortgage Payment Calculator</h1>
+  <p>Free Real Estate Tools by Pure Equity Realty US</p>
+</header>
+
+<main>
+
+  <div class="calculator">
+
+    <h2>Calculate Your Monthly Mortgage Payment</h2>
+
+    <p>
+      Enter your home price, down payment,
+      interest rate, and loan term to estimate
+      your monthly principal and interest payment.
+    </p>
+
+    <label for="price">Home Price ($)</label>
+    <input
+      type="number"
+      id="price"
+      value="400000"
+      min="0"
+      step="1000"
+    >
+
+    <label for="down">Down Payment ($)</label>
+    <input
+      type="number"
+      id="down"
+      value="80000"
+      min="0"
+      step="1000"
+    >
+
+    <label for="rate">Annual Interest Rate (%)</label>
+    <input
+      type="number"
+      id="rate"
+      value="6.5"
+      min="0"
+      step="0.01"
+    >
+
+    <label for="years">Loan Term (Years)</label>
+    <input
+      type="number"
+      id="years"
+      value="30"
+      min="1"
+      step="1"
+    >
+
+    <button onclick="calculateMortgage()">
+      Calculate Payment
+    </button>
+
+    <div class="result" aria-live="polite">
+      <p>Estimated Monthly Payment</p>
+      <strong id="payment">—</strong>
+      <small>Principal and interest only</small>
+    </div>
+
+  </div>
+
+  <section>
+    <h2>Planning to Buy a Home in South Florida?</h2>
+
+    <p>
+      Understanding your potential mortgage payment
+      is an important part of planning your home purchase.
+      This calculator can help you estimate the monthly
+      principal and interest payment based on your
+      preferred loan amount and repayment period.
+    </p>
+
+    <p>
+      For additional home-buying information and real
+      estate resources, visit
+      <a href="https://pureequity.us/">
+        Pure Equity Realty US
+      </a>.
+    </p>
+  </section>
+
+</main>
+
+<footer>
+  <p>
+    Mortgage Calculator by
+    <a href="https://pureequity.us/">
+      Pure Equity Realty US
+    </a>
+  </p>
+
+  <p>
+    Estimates are for informational purposes only.
+    Actual mortgage payments may include property
+    taxes, homeowners insurance, mortgage insurance,
+    and other costs.
+  </p>
+</footer>
+
+<script>
+function calculateMortgage() {
+
+  const price = Number(
+    document.getElementById("price").value
+  );
+
+  const down = Number(
+    document.getElementById("down").value
+  );
+
+  const annualRate = Number(
+    document.getElementById("rate").value
+  );
+
+  const years = Number(
+    document.getElementById("years").value
+  );
+
+  const output = document.getElementById("payment");
+
+  if (
+    !Number.isFinite(price) ||
+    !Number.isFinite(down) ||
+    !Number.isFinite(annualRate) ||
+    !Number.isFinite(years) ||
+    price <= 0 ||
+    down < 0 ||
+    down > price ||
+    annualRate < 0 ||
+    years <= 0
+  ) {
+    output.textContent = "Please enter valid values.";
+    return;
+  }
+
+  const principal = price - down;
+  const monthlyRate = annualRate / 100 / 12;
+  const payments = years * 12;
+
+  let monthlyPayment;
+
+  if (monthlyRate === 0) {
+    monthlyPayment = principal / payments;
+  } else {
+    const factor = Math.pow(1 + monthlyRate, payments);
+
+    monthlyPayment =
+      principal * monthlyRate * factor / (factor - 1);
+  }
+
+  output.textContent = monthlyPayment.toLocaleString(
+    "en-US",
+    {
+      style: "currency",
+      currency: "USD"
+    }
+  );
+}
+
+calculateMortgage();
+</script>
+
+</body>
+</html>
